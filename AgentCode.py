@@ -56,7 +56,7 @@ async def main() -> None:
                 # Since no Agent ID is provided, the agent will be automatically created and deleted after getting response
             ),
             instructions=AGENT_INSTRUCTIONS,
-            max_completion_tokens=4096,
+            max_completion_tokens=2048,
             tools=[
                 *create_mcp_tools(),
             ],

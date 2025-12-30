@@ -18,6 +18,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# ⚙️ CONFIGURATION
+DELAY_BETWEEN_QUERIES = 6  # seconds - prevents rate limit errors
+
 
 @dataclass
 class TestQuery:
@@ -179,7 +182,14 @@ class QuickTester:
             
         except Exception as e:
             execution_time = asyncio.get_event_loop().time() - start_time
-            print(f"\n✗ ERROR: {str(e)}")
+            error_msg = str(e)
+            
+            # Check if it's a rate limit error
+            if "rate limit" in error_msg.lower():
+                print(f"\n⚠️  RATE LIMIT ERROR: {error_msg}")
+                print(f"Tip: Increase DELAY_BETWEEN_QUERIES in quick_test.py")
+            else:
+                print(f"\n✗ ERROR: {error_msg}")
             return QueryResult(
                 query_id=test_query.id,
                 query=test_query.query,
@@ -213,10 +223,14 @@ class QuickTester:
         ):
             thread = agent.get_new_thread()
             
-            for test_query in TEST_QUERIES:
+            for i, test_query in enumerate(TEST_QUERIES):
                 result = await self.run_query(test_query, agent, thread)
                 self.results.append(result)
-                await asyncio.sleep(1)  # Brief pause
+    
+            # ⚙️ Add delay between queries (except after last one)
+            if i < len(TEST_QUERIES) - 1:
+                print(f"\n⏸️  Waiting {DELAY_BETWEEN_QUERIES}s before next query...")
+                await asyncio.sleep(DELAY_BETWEEN_QUERIES)
         
         self.print_summary()
         self.save_results()
