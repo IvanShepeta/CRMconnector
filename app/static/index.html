@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NT.UA - Консультант з курсів</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .header { background: #1976d2; color: white; padding: 20px; border-radius: 10px 10px 0 0; }
+        .chat-container { background: white; height: 500px; overflow-y: auto; padding: 20px; border-left: 1px solid #ddd; border-right: 1px solid #ddd; }
+        .message { margin: 15px 0; padding: 12px; border-radius: 10px; max-width: 70%; }
+        .user { background: #e3f2fd; margin-left: auto; text-align: right; }
+        .assistant { background: #f5f5f5; }
+        .input-area { display: flex; gap: 10px; padding: 15px; background: white; border-radius: 0 0 10px 10px; border: 1px solid #ddd; }
+        #userIdInput { padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 1; }
+        #messageInput { padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 3; }
+        button { padding: 10px 20px; background: #1976d2; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #1565c0; }
+        .typing { color: #999; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Навчальний Центр «Мережні Технології»</h1>
+            <p>Ваш персональний консультант з підбору IT-курсів</p>
+        </div>
+        
+        <div class="chat-container" id="chat"></div>
+        
+        <div class="input-area">
+            <input type="text" id="userIdInput" placeholder="Ваш email або телефон..." />
+            <input type="text" id="messageInput" placeholder="Напишіть ваше запитання..." />
+            <button onclick="sendMessage()">Відправити</button>
+            <button onclick="newConversation()">Нова розмова</button>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let currentUserId = null;
+        let currentMessage = null;
+
+        function connectWebSocket(userId) {
+            if (ws) ws.close();
+            
+            ws = new WebSocket(`ws://localhost:8000/ws/${userId}`);
+            currentUserId = userId;
+            
+            ws.onopen = () => console.log('✅ WebSocket підключено');
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                
+                if (data.type === 'chunk') {
+                    // Додаємо chunk до поточного повідомлення
+                    if (!currentMessage) {
+                        currentMessage = addMessage('assistant', '');
+                    }
+                    currentMessage.textContent += data.content;
+                } else if (data.type === 'stream_end') {
+                    currentMessage = null;
+                } else {
+                    // Звичайне повідомлення
+                    addMessage(data.role, data.content);
+                }
+            };
+            
+            ws.onerror = (error) => console.error('❌ WebSocket помилка:', error);
+            ws.onclose = () => console.log('👋 WebSocket закрито');
+        }
+
+        function addMessage(role, content) {
+            const chat = document.getElementById('chat');
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+            div.textContent = content;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+            return div;
+        }
+
+        function sendMessage() {
+            const userId = document.getElementById('userIdInput').value.trim();
+            const message = document.getElementById('messageInput').value.trim();
+            
+            if (!userId) {
+                alert('Будь ласка, вкажіть ваш email або телефон');
+                return;
+            }
+            
+            if (!message) return;
+            
+            if (!ws || currentUserId !== userId) {
+                connectWebSocket(userId);
+            }
+            
+            ws.send(JSON.stringify({ message }));
+            document.getElementById('messageInput').value = '';
+        }
+
+        async function newConversation() {
+            const userId = document.getElementById('userIdInput').value.trim();
+            if (!userId) return;
+            
+            await fetch('/api/new-conversation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId })
+            });
+            
+            document.getElementById('chat').innerHTML = '';
+            connectWebSocket(userId);
+        }
+
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>

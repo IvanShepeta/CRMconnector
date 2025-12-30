@@ -6,6 +6,7 @@ from typing import List, Dict, Optional
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+import sys
 
 load_dotenv()
 
@@ -175,7 +176,6 @@ async def get_course_program(course_code: str) -> str:
 
 
 
-
 @server.tool(
     name="health",
     title="Health check",
@@ -184,8 +184,7 @@ async def get_course_program(course_code: str) -> str:
 async def health() -> str:
     return "ok"
 
-import os
-import sys
+
 if __name__ == "__main__":
     transport_type = sys.argv[1] if len(sys.argv) > 1 else "http"
     server.settings.log_level = os.environ.get("LOG_LEVEL", "DEBUG")
