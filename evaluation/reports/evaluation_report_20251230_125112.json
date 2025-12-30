@@ -1,0 +1,165 @@
+{
+  "timestamp": "2025-12-30T12:51:12.820040",
+  "total_tests": 8,
+  "passed_tests": 2,
+  "failed_tests": 6,
+  "average_score": 0.47916666666666663,
+  "average_execution_time": 9.874907287507085,
+  "results": [
+    {
+      "test_id": "TC001",
+      "query": "Привіт, чи є зараз курси по Python?",
+      "success": true,
+      "response": "Привіт! Є кілька курсів по Python, ось вони:\n\n1. **Мова Python для бізнес-аналітиків.**  \n   - Тривалість: 40 годин  \n   - Ціна: 23,500 грн  \n\n2. **Мова Python в технологіях клієнт-сервер і розподілених обчислень.**  \n   - Тривалість: 48 годин  \n   - Ціна: 25,740 грн  \n\n3. **Мова Python і розробка корпоративних веб-додатків.**  \n   - Тривалість: 40 годин  \n   - Ціна: 23,500 грн  \n\n4. **Web і розробка сучасних додатків. Технології React, Angular, NodeJS, Jakarta EE, Python.**  \n   - Тривалість: 40 годин  \n   - Ціна: 23,500 грн  \n\n5. **Python: програмування з нуля.**  \n   - Тривалість: 56 годин  \n   - Ціна: 15,064 грн  \n\n6. **Просте програмування. Python для автоматизації.**  \n   - Тривалість: 54 години  \n   - Ціна: 14,526 грн  \n\nЯкщо вас цікавить якийсь конкретний курс, дайте знати, я можу надати більше інформації або допомогти з реєстрацією.",
+      "tools_called": [
+        "search_courses"
+      ],
+      "execution_time": 14.03163179999683,
+      "error": null,
+      "score": 1.0,
+      "details": {
+        "contains_course_info": "PASS",
+        "tool_used": "PASS (tools: ['search_courses'])",
+        "response_length_min": "PASS (length: 853)"
+      }
+    },
+    {
+      "test_id": "TC002",
+      "query": "Які курси доступні для початківців?",
+      "success": false,
+      "response": "Ось кілька курсів для початківців:\n\n1. **Python: програмування з нуля.**  \n   - Тривалість: 56 годин  \n   - Ціна: 15,064 грн  \n\n2. **Основи JavaScript програмування.**  \n   - Тривалість: 48 годин  \n   - Ціна: 13,248 грн  \n\n3. **JavaScript: основи Front-end розробки.**  \n   - Тривалість: 48 годин  \n   - Ціна: 11,520 грн  \n\n4. **Основи сервера БД PostgreSQL: розгортання та використання додатків, триланкова архітектура.**  \n   - Тривалість: 40 годин  \n   - Ціна: 25,000 грн  \n\n5. **QA: тестування з нуля.**  \n   - Тривалість: 36 годин  \n   - Ціна: 10,620 грн  \n\n6. **Гнучке управління проектами на базі SCRUM.**  \n   - Тривалість: 20 годин  \n   - Ціна: 17,500 грн  \n\nЯкщо вас цікавить конкретний курс, дайте знати, я можу надати більше інформації або допомогти з реєстрацією!",
+      "tools_called": [
+        "search_courses"
+      ],
+      "execution_time": 9.006637000013143,
+      "error": null,
+      "score": 0.6666666666666666,
+      "details": {
+        "contains_course_info": "PASS",
+        "mentions_level": "FAIL",
+        "tool_used": "PASS (tools: ['search_courses'])"
+      }
+    },
+    {
+      "test_id": "TC003",
+      "query": "Скільки коштує курс Python?",
+      "success": false,
+      "response": "Ось ціни на курси Python:\n\n1. **Python: програмування з нуля.**  \n   - Ціна: 15,064 грн  \n\n2. **Мова Python для бізнес-аналітиків.**  \n   - Ціна: 23,500 грн  \n\n3. **Мова Python в технологіях клієнт-сервер і розподілених обчислень.**  \n   - Ціна: 25,740 грн  \n\n4. **Мова Python і розробка корпоративних веб-додатків.**  \n   - Ціна: 23,500 грн  \n\n5. **Просте програмування. Python для автоматизації.**  \n   - Ціна: 14,526 грн  \n\nЯкщо вам потрібно більше інформації про один з курсів або реєстрація, дайте знати!",
+      "tools_called": [],
+      "execution_time": 5.143809399974998,
+      "error": null,
+      "score": 0.6666666666666666,
+      "details": {
+        "contains_price": "PASS",
+        "tool_used": "FAIL (tools: [])",
+        "response_length_min": "PASS (length: 509)"
+      }
+    },
+    {
+      "test_id": "TC004",
+      "query": "Коли починається наступний набір на курси?",
+      "success": false,
+      "response": "Ось інформація про курси Python та їх дати початку:\n\n1. **Python: програмування з нуля.**  \n   - **Тривалість:** 56 годин  \n   - **Ціна:** 15,064 грн  \n   - [Детальніше](https://nt.ua/academy/python/nta-pb)\n\n2. **Мова Python для бізнес-аналітиків.**  \n   - **Тривалість:** 40 годин  \n   - **Ціна:** 23,500 грн  \n   - [Детальніше](https://nt.ua/courses/python-e/nt-python-for-ba)\n\n3. **Мова Python в технологіях клієнт-сервер і розподілених обчислень.**  \n   - **Тривалість:** 48 годин  \n   - **Ціна:** 25,740 грн  \n   - [Детальніше](https://nt.ua/courses/python-e/nt-python-for-cs)\n\n4. **Мова Python і розробка корпоративних веб-додатків.**  \n   - **Тривалість:** 40 годин  \n   - **Ціна:** 23,500 грн  \n   - [Детальніше](https://nt.ua/courses/python-e/nt-pythonweb)\n\n5. **Просте програмування. Python для автоматизації.**  \n   - **Тривалість:** 54 години  \n   - **Ціна:** 14,526 грн  \n   - [Детальніше](https://nt.ua/academy/python/nta-pa)\n\nНа сайті не надано конкретних дат початку для кожного курсу. Я рекомендую звернутися до менеджера центру або перевірити на сайті, щоб отримати актуальні дати набору.\n\nЯкщо вам потрібна додаткова допомога, дайте знати!",
+      "tools_called": [
+        "get_course_by_code",
+        "get_course_by_code",
+        "get_course_by_code",
+        "get_course_by_code",
+        "get_course_by_code",
+        "get_course_by_code"
+      ],
+      "execution_time": 13.773539000016171,
+      "error": null,
+      "score": 0.5,
+      "details": {
+        "contains_date_info": "FAIL",
+        "tool_used": "PASS (tools: ['get_course_by_code', 'get_course_by_code', 'get_course_by_code', 'get_course_by_code', 'get_course_by_code', 'get_course_by_code'])"
+      }
+    },
+    {
+      "test_id": "TC005",
+      "query": "Хочу записатися на курс JavaScript",
+      "success": true,
+      "response": "Ви обрали курс:\n\n**JavaScript: основи Front-end розробки.**  \n- **Опис:** Вивчення основ Front-end розробки: JavaScript програмування для початківців.  \n- **Тривалість:** 48 годин  \n- **Ціна:** 11,520 грн  \n- [Детальніше та реєстрація](https://nt.ua/academy/front-end/nta-fjsb)\n\nЩоб записатися на курс, будь ласка, повідомте, чи потрібно надіслати вам деталі для реєстрації або зв'язатися з менеджером.",
+      "tools_called": [
+        "get_course_by_code"
+      ],
+      "execution_time": 9.467315300018527,
+      "error": null,
+      "score": 1.0,
+      "details": {
+        "mentions_enrollment": "PASS",
+        "tool_used": "PASS (tools: ['get_course_by_code'])",
+        "asks_for_details": "PASS"
+      }
+    },
+    {
+      "test_id": "TC006",
+      "query": "Дякую за інформацію",
+      "success": false,
+      "response": "",
+      "tools_called": [],
+      "execution_time": 6.671191200031899,
+      "error": "Your requests to gpt-4o-mini for gpt-4o-mini in Sweden Central have exceeded the token rate limit for your current AIServices S0 pricing tier. This request was for Completions_Create under Azure OpenAI API version 2025-03-01-preview. Please retry after 14 seconds. To increase your default rate limit, visit: https://aka.ms/oai/quotaincrease.",
+      "score": 0.0,
+      "details": {
+        "error": "Your requests to gpt-4o-mini for gpt-4o-mini in Sweden Central have exceeded the token rate limit for your current AIServices S0 pricing tier. This request was for Completions_Create under Azure OpenAI API version 2025-03-01-preview. Please retry after 14 seconds. To increase your default rate limit, visit: https://aka.ms/oai/quotaincrease."
+      }
+    },
+    {
+      "test_id": "TC007",
+      "query": "Які теми охоплює курс Python?",
+      "success": false,
+      "response": "",
+      "tools_called": [],
+      "execution_time": 7.583816300029866,
+      "error": "Your requests to gpt-4o-mini for gpt-4o-mini in Sweden Central have exceeded the token rate limit for your current AIServices S0 pricing tier. This request was for Completions_Create under Azure OpenAI API version 2025-03-01-preview. Please retry after 6 seconds. To increase your default rate limit, visit: https://aka.ms/oai/quotaincrease.",
+      "score": 0.0,
+      "details": {
+        "error": "Your requests to gpt-4o-mini for gpt-4o-mini in Sweden Central have exceeded the token rate limit for your current AIServices S0 pricing tier. This request was for Completions_Create under Azure OpenAI API version 2025-03-01-preview. Please retry after 6 seconds. To increase your default rate limit, visit: https://aka.ms/oai/quotaincrease."
+      }
+    },
+    {
+      "test_id": "TC008",
+      "query": "Чи потрібні попередні знання для курсу?",
+      "success": false,
+      "response": "",
+      "tools_called": [],
+      "execution_time": 13.321318299975246,
+      "error": "Your requests to gpt-4o-mini for gpt-4o-mini in Sweden Central have exceeded the token rate limit for your current AIServices S0 pricing tier. This request was for Completions_Create under Azure OpenAI API version 2025-03-01-preview. Please retry after 2 seconds. To increase your default rate limit, visit: https://aka.ms/oai/quotaincrease.",
+      "score": 0.0,
+      "details": {
+        "error": "Your requests to gpt-4o-mini for gpt-4o-mini in Sweden Central have exceeded the token rate limit for your current AIServices S0 pricing tier. This request was for Completions_Create under Azure OpenAI API version 2025-03-01-preview. Please retry after 2 seconds. To increase your default rate limit, visit: https://aka.ms/oai/quotaincrease."
+      }
+    }
+  ],
+  "summary": {
+    "pass_rate": "25.0%",
+    "category_breakdown": {
+      "course_search": {
+        "pass_rate": "50.0%",
+        "avg_score": "83.3%"
+      },
+      "pricing": {
+        "pass_rate": "0.0%",
+        "avg_score": "66.7%"
+      },
+      "scheduling": {
+        "pass_rate": "0.0%",
+        "avg_score": "50.0%"
+      },
+      "enrollment": {
+        "pass_rate": "100.0%",
+        "avg_score": "100.0%"
+      },
+      "conversation": {
+        "pass_rate": "0.0%",
+        "avg_score": "0.0%"
+      },
+      "course_details": {
+        "pass_rate": "0.0%",
+        "avg_score": "0.0%"
+      }
+    }
+  }
+}

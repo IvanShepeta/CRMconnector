@@ -1,0 +1,144 @@
+{
+  "test_name": "Quick Test - 10 Essential Queries",
+  "timestamp": "2025-12-30T12:48:09.909803",
+  "total_queries": 10,
+  "results": [
+    {
+      "query_id": 1,
+      "query": "Привіт, чи є зараз курси по Python?",
+      "category": "course_search",
+      "response": "Привіт! Так, у нас є кілька курсів з Python:\n\n1. **Мова Python для бізнес-аналітиків. Побудова звітів і візуалізація даних для офісних додатків**\n   - Тривалість: 40 годин\n   - Ціна: 23,500 грн\n\n2. **Мова Python в технологіях клієнт-сервер і розподілених обчислень**\n   - Тривалість: 48 годин\n   - Ціна: 25,740 грн\n\n3. **Мова Python і розробка корпоративних веб-додатків**\n   - Тривалість: 40 годин\n   - Ціна: 23,500 грн\n\n4. **Python: програмування з нуля**\n   - Тривалість: 56 годин\n   - Ціна: 15,064 грн\n\n5. **Просте програмування. Python для автоматизації**\n   - Тривалість: 54 години\n   - Ціна: 14,526 грн\n\nЯкщо вас цікавить конкретний курс або маєте питання, дайте знати!",
+      "tools_used": [
+        "search_courses"
+      ],
+      "execution_time": 13.350443699979223,
+      "timestamp": "2025-12-30T12:47:00.214536"
+    },
+    {
+      "query_id": 2,
+      "query": "Які курси доступні для початківців?",
+      "category": "course_search",
+      "response": "Для початківців доступний курс:\n\n1. **Python: програмування з нуля**\n   - Тривалість: 56 годин\n   - Ціна: безкоштовно\n   - [Деталі курсу](https://nt.ua/academy/python/nta-pb)\n   - Опис: Вивчення основ програмування Python з нуля.\n\nНа даний момент іншого курсу для початківців не знайдено. Якщо є запитання або бажання дізнатись більше, будь ласка, дайте знати!",
+      "tools_used": [
+        "get_active_courses",
+        "get_active_courses"
+      ],
+      "execution_time": 7.5369534000055864,
+      "timestamp": "2025-12-30T12:47:08.785340"
+    },
+    {
+      "query_id": 3,
+      "query": "Скільки коштує курс JavaScript?",
+      "category": "pricing",
+      "response": "Ось декілька курсів з JavaScript та їх ціни:\n\n1. **Програмування в HTML5 з JavaScript і CSS3**\n   - Тривалість: 40 годин\n   - Ціна: 23,500 грн\n\n2. **Основи розробки додатків для Windows Store на HTML5 і JavaScript**\n   - Тривалість: 40 годин\n   - Ціна: 23,500 грн\n\n3. **JavaScript: основи Front-end розробки**\n   - Тривалість: 48 годин\n   - Ціна: 11,520 грн\n\n4. **JavaScript: розробка Web-додатків**\n   - Тривалість: 42 години\n   - Ціна: 11,288 грн\n\n5. **Основи JavaScript програмування**\n   - Тривалість: 48 годин\n   - Ціна: 13,248 грн\n\nЯкщо вам потрібна детальніша інформація про певний курс, звертайтеся!",
+      "tools_used": [
+        "search_courses"
+      ],
+      "execution_time": 8.616431800008286,
+      "timestamp": "2025-12-30T12:47:18.404827"
+    },
+    {
+      "query_id": 4,
+      "query": "Чи є знижки на курси?",
+      "category": "pricing",
+      "response": "Знижки на курси можуть бути доступні, але їх умови варіюються в залежності від конкретного курсу та періоду. Я можу перевірити можливість знижок для вас або ви можете надіслати резюме менеджеру для отримання персоналізованої пропозиції. \n\nЧи хотіли б ви скористатися цією можливістю?",
+      "tools_used": [],
+      "execution_time": 3.144664900028147,
+      "timestamp": "2025-12-30T12:47:22.560411"
+    },
+    {
+      "query_id": 5,
+      "query": "Коли починається наступний набір на курси?",
+      "category": "scheduling",
+      "response": "Наступні набори на курси:\n\n### Python:\n1. **Python: програмування з нуля**\n   - [Деталі курсу](https://nt.ua/academy/python/nta-pb)\n   - Тривалість: 56 годин\n   - Ціна: безкоштовно\n\n2. **Мова Python для бізнес-аналітиків**\n   - [Деталі курсу](https://nt.ua/courses/python-e/nt-python-for-ba)\n   - Тривалість: 40 годин\n   - Ціна: безкоштовно\n\n### JavaScript:\n1. **JavaScript: основи Front-end розробки**\n   - [Деталі курсу](https://nt.ua/academy/front-end/nta-fjsb)\n   - Тривалість: 48 годин\n   - Ціна: безкоштовно\n\n2. **JavaScript: розробка Web-додатків**\n   - [Деталі курсу](https://nt.ua/academy/front-end/nta-fjsa)\n   - Тривалість: 42 години\n   - Ціна: безкоштовно\n\n3. **Основи JavaScript програмування**\n   - [Деталі курсу](https://nt.ua/academy/js/nta-jsb)\n   - Тривалість: 48 годин\n   - Ціна: безкоштовно\n\nУсі зазначені курси мають безкоштовну вартість. Якщо бажаєте дізнатись більше про будь-який з курсів, повідомте, будь ласка!",
+      "tools_used": [
+        "get_active_courses",
+        "get_active_courses"
+      ],
+      "execution_time": 9.847212599997874,
+      "timestamp": "2025-12-30T12:47:33.439539"
+    },
+    {
+      "query_id": 6,
+      "query": "Скільки триває курс Python?",
+      "category": "scheduling",
+      "response": "ERROR: Your requests to gpt-4o-mini for gpt-4o-mini in Sweden Central have exceeded the token rate limit for your current AIServices S0 pricing tier. This request was for Completions_Create under Azure OpenAI API version 2025-03-01-preview. Please retry after 28 seconds. To increase your default rate limit, visit: https://aka.ms/oai/quotaincrease.",
+      "tools_used": [],
+      "execution_time": 4.597106600005645,
+      "timestamp": "2025-12-30T12:47:39.046494"
+    },
+    {
+      "query_id": 7,
+      "query": "Хочу записатися на курс React",
+      "category": "enrollment",
+      "response": "ERROR: Your requests to gpt-4o-mini for gpt-4o-mini in Sweden Central have exceeded the token rate limit for your current AIServices S0 pricing tier. This request was for Completions_Create under Azure OpenAI API version 2025-03-01-preview. Please retry after 21 seconds. To increase your default rate limit, visit: https://aka.ms/oai/quotaincrease.",
+      "tools_used": [],
+      "execution_time": 6.407295899989549,
+      "timestamp": "2025-12-30T12:47:46.457010"
+    },
+    {
+      "query_id": 8,
+      "query": "Які теми охоплює курс Python?",
+      "category": "course_details",
+      "response": "ERROR: Your requests to gpt-4o-mini for gpt-4o-mini in Sweden Central have exceeded the token rate limit for your current AIServices S0 pricing tier. This request was for Completions_Create under Azure OpenAI API version 2025-03-01-preview. Please retry after 14 seconds. To increase your default rate limit, visit: https://aka.ms/oai/quotaincrease.",
+      "tools_used": [],
+      "execution_time": 6.394213200022932,
+      "timestamp": "2025-12-30T12:47:53.853987"
+    },
+    {
+      "query_id": 9,
+      "query": "Чи потрібні попередні знання для курсу?",
+      "category": "course_details",
+      "response": "ERROR: Your requests to gpt-4o-mini for gpt-4o-mini in Sweden Central have exceeded the token rate limit for your current AIServices S0 pricing tier. This request was for Completions_Create under Azure OpenAI API version 2025-03-01-preview. Please retry after 5 seconds. To increase your default rate limit, visit: https://aka.ms/oai/quotaincrease.",
+      "tools_used": [],
+      "execution_time": 7.338979899999686,
+      "timestamp": "2025-12-30T12:48:02.195017"
+    },
+    {
+      "query_id": 10,
+      "query": "Дякую за інформацію",
+      "category": "conversation",
+      "response": "Будь ласка! Радію, що зміг допомогти. Якщо у Вас виникнуть ще питання або буде потрібна додаткова інформація, не соромтесь звертатися. Успіхів у навчанні!",
+      "tools_used": [],
+      "execution_time": 5.138379199954215,
+      "timestamp": "2025-12-30T12:48:08.337738"
+    }
+  ],
+  "statistics": {
+    "total_time": 72.37168119999114,
+    "average_time": 7.237168119999114,
+    "categories": {
+      "course_search": {
+        "count": 2,
+        "total_time": 20.88739709998481,
+        "avg_time": 10.443698549992405
+      },
+      "pricing": {
+        "count": 2,
+        "total_time": 11.761096700036433,
+        "avg_time": 5.880548350018216
+      },
+      "scheduling": {
+        "count": 2,
+        "total_time": 14.44431920000352,
+        "avg_time": 7.22215960000176
+      },
+      "enrollment": {
+        "count": 1,
+        "total_time": 6.407295899989549,
+        "avg_time": 6.407295899989549
+      },
+      "course_details": {
+        "count": 2,
+        "total_time": 13.733193100022618,
+        "avg_time": 6.866596550011309
+      },
+      "conversation": {
+        "count": 1,
+        "total_time": 5.138379199954215,
+        "avg_time": 5.138379199954215
+      }
+    },
+    "tool_usage_rate": 0.4
+  }
+}
