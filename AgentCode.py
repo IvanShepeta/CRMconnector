@@ -13,11 +13,10 @@ load_dotenv()
 
 # Configure OTLP endpoint and whether to capture sensitive data via env vars
 OTLP_ENDPOINT = os.environ.get("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4317")
-ENABLE_SENSITIVE = os.environ.get("OTEL_CAPTURE_SENSITIVE", "false").lower() in ("1", "true", "yes")
 
 # Initialize tracing and instrumentation. When running locally, start the AI Toolkit trace collector:
 # - VS Code command: `ai-mlstudio.tracing.open`
-setup_observability(otlp_endpoint=OTLP_ENDPOINT, enable_sensitive_data=ENABLE_SENSITIVE)
+setup_observability(otlp_endpoint=OTLP_ENDPOINT, enable_sensitive_data="true")
 
 # Microsoft Foundry Agent Configuration
 ENDPOINT = os.getenv("ENDPOINT")
