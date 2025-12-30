@@ -1,272 +1,358 @@
 # Agent Evaluation System
 
-Comprehensive evaluation framework for testing the CRM Connector agent's performance.
+Проста система для тестування та покращення вашого CRM агента.
 
-## Overview
-
-This evaluation system provides automated testing capabilities to measure your agent's performance across different categories of tasks including course search, pricing inquiries, enrollment, and general conversation handling.
-
-## Features
-
-- **Automated Test Cases**: 8 predefined test cases covering various scenarios
-- **Multi-criteria Evaluation**: Each test evaluates multiple success criteria
-- **Detailed Reporting**: JSON reports with scores, execution times, and detailed feedback
-- **Category Analysis**: Performance breakdown by task category
-- **Tool Usage Tracking**: Monitors which tools the agent uses for each query
-
-## Test Categories
-
-1. **Course Search** - Finding and listing available courses
-2. **Pricing** - Retrieving course pricing information
-3. **Scheduling** - Getting enrollment dates and schedules
-4. **Enrollment** - Handling student registration requests
-5. **Course Details** - Providing curriculum and prerequisite information
-6. **Conversation** - General conversational responses
-
-## Installation
-
-No additional dependencies are required beyond those already in your `pyproject.toml`.
-
-## Usage
-
-### Running Evaluation
+## 🚀 Швидкий старт
 
 ```bash
-python evaluation/evaluate_agent.py
+# 1. Запустити тест (10 запитів, ~30 сек)
+python evaluation/quick_test.py
+
+# 2. Проаналізувати результати
+python evaluation/simple_analyze.py
+
+# 3. Виправити ТОП-3 проблеми
+# 4. Повторити тест
 ```
 
-### Environment Variables
+**Це все що потрібно!** ✅
 
-Ensure these variables are set in your `.env` file:
+---
 
-```env
-ENDPOINT=your_azure_endpoint
-MODEL_DEPLOYMENT_NAME=your_model_name
-AGENT_INSTRUCTIONS=your_agent_instructions
-OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+## 📁 Структура
+
+```
+evaluation/
+├── quick_test.py          # Швидкий тест (10 запитів)
+├── simple_analyze.py      # Простий аналіз з рекомендаціями
+├── common.py              # Спільні утиліти
+├── data/                  # Результати тестів
+├── reports/               # Звіти
+└── README.md              # Ця інструкція
 ```
 
-### Prerequisites
+---
 
-1. Your CRM connector MCP server must be running at `http://localhost:3001/mcp`
-2. Azure credentials must be configured
-3. OTLP trace collector should be running (optional but recommended)
+## 📊 Що тестується?
 
-## Test Cases
+### 10 ключових запитів:
+1. **Пошук курсів Python** - "Привіт, чи є зараз курси по Python?"
+2. **Курси для початківців** - "Які курси доступні для початківців?"
+3. **Ціна JavaScript** - "Скільки коштує курс JavaScript?"
+4. **Знижки** - "Чи є знижки на курси?"
+5. **Дати набору** - "Коли починається наступний набір?"
+6. **Тривалість курсу** - "Скільки триває курс Python?"
+7. **Запис на React** - "Хочу записатися на курс React"
+8. **Програма курсу** - "Які теми охоплює курс Python?"
+9. **Передумови** - "Чи потрібні попередні знання?"
+10. **Подяка** - "Дякую за інформацію"
 
-### TC001: Python Course Availability
-**Query**: "Привіт, чи є зараз курси по Python?"
-- Tests: Course search functionality
-- Expected: Should return Python course availability
-- Tools: search_courses, get_available_courses
+**Категорії:** пошук курсів, ціноутворення, розклад, реєстрація, деталі курсів, розмова
 
-### TC002: Beginner Courses
-**Query**: "Які курси доступні для початківців?"
-- Tests: Course filtering by level
-- Expected: List beginner-level courses
-- Tools: list_courses, filter_courses
+---
 
-### TC003: Course Pricing
-**Query**: "Скільки коштує курс Python?"
-- Tests: Price retrieval
-- Expected: Return pricing information
-- Tools: get_course_price, get_course_details
+## 🔍 Детальніше про скрипти
 
-### TC004: Enrollment Schedule
-**Query**: "Коли починається наступний набір?"
-- Tests: Schedule information
-- Expected: Provide enrollment dates
-- Tools: get_course_schedule, get_enrollment_dates
+### `quick_test.py` - Швидкий тест
 
-### TC005: Course Enrollment
-**Query**: "Хочу записатися на курс JavaScript"
-- Tests: Enrollment process initiation
-- Expected: Start enrollment and ask for details
-- Tools: enroll_student, create_enrollment
+**Що робить:**
+- Запускає 10 найважливіших запитів
+- Показує відповіді агента в реальному часі
+- Відстежує які інструменти використовуються
+- Вимірює час виконання
+- Зберігає результати в JSON
 
-### TC006: Polite Response
-**Query**: "Дякую за інформацію"
-- Tests: Conversational capability without tools
-- Expected: Polite response without tool usage
-- Tools: None
+**Коли використовувати:**
+- Після кожної зміни в агенті
+- Перед commit в Git
+- Щоденна перевірка
 
-### TC007: Course Curriculum
-**Query**: "Які теми охоплює курс Python?"
-- Tests: Curriculum information retrieval
-- Expected: Detailed course topics
-- Tools: get_course_details, get_course_curriculum
+**Приклад виводу:**
+```
+[1/10] Category: course_search
+Query: Привіт, чи є зараз курси по Python?
+======================================================================
+[Відповідь агента...]
 
-### TC008: Course Prerequisites
-**Query**: "Чи потрібні попередні знання?"
-- Tests: Prerequisites information
-- Expected: List required knowledge
-- Tools: get_course_prerequisites, get_course_details
-
-## Evaluation Criteria
-
-Each test case is evaluated against multiple criteria:
-
-- **Tool Usage**: Correct tools are called
-- **Response Content**: Contains expected information
-- **Response Length**: Meets minimum length requirements
-- **Behavioral Checks**: Follows expected patterns (e.g., asks for details, polite responses)
-
-**Success Threshold**: 70% of criteria must pass for a test to be marked as successful.
-
-## Report Format
-
-Reports are saved in `evaluation/reports/` with the following structure:
-
-```json
-{
-  "timestamp": "2025-12-30T12:00:00",
-  "total_tests": 8,
-  "passed_tests": 7,
-  "failed_tests": 1,
-  "average_score": 0.85,
-  "average_execution_time": 3.2,
-  "summary": {
-    "pass_rate": "87.5%",
-    "category_breakdown": {
-      "course_search": {
-        "pass_rate": "100%",
-        "avg_score": "95%"
-      }
-    }
-  },
-  "results": [...]
-}
+──────────────────────────────────────────────────────────────────────
+Tools used: ['search_courses']
+Expected: ['search_courses', 'get_available_courses']
+Time: 2.34s
+──────────────────────────────────────────────────────────────────────
 ```
 
-## Customization
+---
 
-### Adding New Test Cases
+### `simple_analyze.py` - Аналіз результатів
 
-Edit `evaluate_agent.py` and add test cases to the `_load_test_cases()` method:
+**Що робить:**
+- Автоматично знаходить останні результати тестів
+- Показує базову статистику
+- Виявляє проблеми (помилки, короткі відповіді, повільні запити)
+- Надає ТОП-3 рекомендації з прикладами коду
+- Може зберегти звіт
 
-```python
-TestCase(
-    id="TC009",
-    query="Your test query",
-    expected_tools=["tool_name"],
-    expected_behavior="Description of expected behavior",
-    success_criteria={
-        "your_criterion": True,
-        "response_length_min": 50
-    },
-    category="your_category"
-)
+**Коли використовувати:**
+- Після кожного тесту
+- Для розуміння що потрібно покращити
+- Щотижнева перевірка прогресу
+
+**Приклад виводу:**
+```
+======================================================================
+AGENT ANALYSIS
+======================================================================
+
+Total queries: 10
+Tool usage: 7/10 (70%)
+Avg response time: 3.45s
+Avg response length: 156 chars
+
+Issues found:
+  Errors: 0
+  Short responses: 1
+  Slow queries (>5s): 1
+
+======================================================================
+TOP RECOMMENDATIONS
+======================================================================
+
+🟡 #1 [MEDIUM] 1 responses too short
+
+Fix:
+Add to AGENT_INSTRUCTIONS:
+  'Always provide detailed answers: minimum 2-3 sentences'
+
+──────────────────────────────────────────────────────────────────────
 ```
 
-### Adding New Success Criteria
-
-Implement new criteria in the `_evaluate_response()` method:
-
-```python
-elif criterion == "your_new_criterion":
-    if your_condition:
-        score += 1
-        details[criterion] = "PASS"
-    else:
-        details[criterion] = "FAIL"
-```
-
-## Interpreting Results
-
-### Score Interpretation
-
-- **90-100%**: Excellent performance
-- **70-89%**: Good performance
-- **50-69%**: Needs improvement
-- **Below 50%**: Poor performance, requires attention
-
-### Common Issues
-
-1. **Low Tool Usage**: Agent not calling appropriate tools
-   - Check agent instructions
-   - Verify MCP server is running
-   - Review tool descriptions
-
-2. **Missing Information**: Responses lack expected content
-   - Improve agent instructions
-   - Verify MCP server data
-   - Check tool implementations
-
-3. **Execution Timeouts**: Tests taking too long
-   - Optimize tool implementations
-   - Check network connectivity
-   - Review token limits
-
-## Continuous Evaluation
-
-For continuous testing during development:
-
+**Опції:**
 ```bash
-# Run evaluation after code changes
-python evaluation/evaluate_agent.py
+# Використати конкретний файл
+python evaluation/simple_analyze.py --dataset path/to/results.json
 
-# Compare reports
-diff evaluation/reports/evaluation_report_*.json
+# Зберегти звіт
+python evaluation/simple_analyze.py --save
 ```
 
-## Best Practices
+---
 
-1. **Baseline Establishment**: Run initial evaluation to establish baseline performance
-2. **Regular Testing**: Evaluate after significant changes to agent or tools
-3. **Trend Analysis**: Track scores over time to identify improvements or regressions
-4. **Category Focus**: Use category breakdown to identify specific areas needing improvement
-5. **Tool Monitoring**: Ensure correct tools are being called for each task type
+## 🛠️ Типові проблеми та рішення
 
-## Troubleshooting
+### Проблема: Низьке використання інструментів
 
-### MCP Server Connection Issues
+**Ознаки:**
+- Tool usage < 50%
+- Агент відповідає без виклику інструментів
 
+**Рішення:**
 ```bash
-# Verify server is running
+# У файлі .env оновіть AGENT_INSTRUCTIONS:
+AGENT_INSTRUCTIONS="Ти - асистент CRM системи курсів.
+ДЛЯ ВІДПОВІДІ НА ЗАПИТИ ПРО КУРСИ ЗАВЖДИ використовуй інструменти:
+- list_courses: для показу всіх курсів
+- search_courses: для пошуку конкретного курсу
+- get_course_details: для деталей курсу
+
+Приклад: Якщо питають 'Які курси є?', використай list_courses."
+```
+
+---
+
+### Проблема: Короткі відповіді
+
+**Ознаки:**
+- Short responses > 2
+- Avg response length < 100
+
+**Рішення:**
+```bash
+# Додайте до AGENT_INSTRUCTIONS:
+"Завжди надавай детальні відповіді:
+- Мінімум 2-3 речення
+- Конкретні дані (ціни, дати, списки)
+- Додаткова корисна інформація
+- Питання для уточнення якщо потрібно"
+```
+
+---
+
+### Проблема: Помилки виконання
+
+**Ознаки:**
+- Errors > 0
+- "ERROR" у відповідях
+
+**Рішення:**
+```bash
+# 1. Перевірте чи працює MCP сервер
 curl http://localhost:3001/mcp
 
-# Check logs
-tail -f logs/mcp_server.log
+# 2. Перезапустіть сервер якщо потрібно
+
+# 3. Додайте обробку помилок до інструкцій:
+"Якщо інструмент недоступний:
+- Вибачся перед користувачем
+- Запропонуй альтернативу
+- Попроси зв'язатися пізніше"
 ```
 
-### Azure Authentication Issues
+---
+
+### Проблема: Повільні відповіді
+
+**Ознаки:**
+- Avg time > 4s
+- Slow queries > 2
+
+**Рішення:**
+```python
+# У файлі AgentCode.py зменшіть:
+max_completion_tokens=2048  # замість 4096
+```
+
+---
+
+## 📈 Workflow покращення
+
+### Щоденний цикл:
+```bash
+# 1. Внести зміни в агента
+# 2. Протестувати
+python evaluation/quick_test.py
+
+# 3. Якщо все ОК - commit
+git add .
+git commit -m "Improved agent instructions"
+```
+
+### Щотижневий цикл:
+```bash
+# 1. Запустити повний тест
+python evaluation/quick_test.py
+
+# 2. Проаналізувати
+python evaluation/simple_analyze.py --save
+
+# 3. Виправити ТОП-3 проблеми
+# 4. Повторити тест
+# 5. Порівняти звіти
+ls -lt evaluation/reports/
+```
+
+---
+
+## 📊 Інтерпретація метрик
+
+### Tool usage rate
+- **90-100%** ✅ Відмінно - агент правильно використовує інструменти
+- **70-89%** 🟡 Добре - є простір для покращення
+- **50-69%** 🟠 Потребує уваги - багато запитів без інструментів
+- **<50%** 🔴 Критично - агент не використовує інструменти
+
+### Avg response time
+- **<3s** ✅ Швидко
+- **3-5s** 🟡 Нормально
+- **5-7s** 🟠 Повільно
+- **>7s** 🔴 Дуже повільно
+
+### Response length
+- **>150 chars** ✅ Детальні відповіді
+- **100-150 chars** 🟡 Достатньо
+- **50-100 chars** 🟠 Коротко
+- **<50 chars** 🔴 Занадто коротко
+
+---
+
+## 🎯 Цілі для якісного агента
+
+- ✅ Tool usage: **>80%**
+- ✅ Avg response time: **<4s**
+- ✅ Avg response length: **>120 chars**
+- ✅ Errors: **0**
+- ✅ Short responses: **<2**
+- ✅ Slow queries: **<2**
+
+---
+
+## 🔧 Налаштування
+
+### Передумови
+
+1. **MCP сервер запущений:**
+   ```bash
+   # Перевірка
+   curl http://localhost:3001/mcp
+   ```
+
+2. **Environment variables встановлені:**
+   ```bash
+   ENDPOINT=your_azure_endpoint
+   MODEL_DEPLOYMENT_NAME=your_model
+   AGENT_INSTRUCTIONS=your_instructions
+   ```
+
+3. **Azure credentials налаштовані:**
+   ```bash
+   az login
+   az account show
+   ```
+
+---
+
+## 📚 Корисні команди
 
 ```bash
-# Test Azure credentials
-az account show
+# Запустити тест
+python evaluation/quick_test.py
 
-# Re-authenticate if needed
-az login
+# Аналіз останніх результатів
+python evaluation/simple_analyze.py
+
+# Аналіз конкретного файлу
+python evaluation/simple_analyze.py --dataset evaluation/data/quick_test_20251230.json
+
+# Зберегти звіт
+python evaluation/simple_analyze.py --save
+
+# Подивитись всі результати
+ls -lt evaluation/data/
+
+# Подивитись всі звіти
+ls -lt evaluation/reports/
+
+# Порівняти два звіти
+diff evaluation/reports/simple_report_1.json evaluation/reports/simple_report_2.json
 ```
 
-### Missing Environment Variables
+---
 
-```bash
-# Verify .env file
-cat .env
+## ❓ FAQ
 
-# Check loaded variables
-python -c "from dotenv import load_dotenv; import os; load_dotenv(); print(os.getenv('ENDPOINT'))"
-```
+**Q: Скільки часу займає тест?**
+A: ~30-40 секунд для 10 запитів
 
-## Future Enhancements
+**Q: Як часто потрібно тестувати?**
+A: Після кожної зміни в агенті + щотижнева перевірка
 
-- [ ] Add performance benchmarking
-- [ ] Implement A/B testing for different agent configurations
-- [ ] Add multi-language test cases
-- [ ] Create visualization dashboard for results
-- [ ] Implement automated regression testing
-- [ ] Add load testing capabilities
+**Q: Що робити якщо всі тести провалюються?**
+A: Перевірте чи працює MCP сервер: `curl http://localhost:3001/mcp`
 
-## Contributing
+**Q: Чи можна додати свої запити?**
+A: Так, відредагуйте список `TEST_QUERIES` в `quick_test.py`
 
-To contribute new test cases or evaluation criteria:
+**Q: Де зберігаються результати?**
+A: В `evaluation/data/quick_test_TIMESTAMP.json`
 
-1. Add test cases following the existing pattern
-2. Document expected behavior
-3. Test thoroughly before committing
-4. Update this README with new test descriptions
+**Q: Де зберігаються звіти?**
+A: В `evaluation/reports/simple_report_TIMESTAMP.json`
 
-## License
+---
 
-Same as parent project.
+## 🎓 Додаткова інформація
+
+Детальний гайд: [`USAGE_GUIDE.md`](USAGE_GUIDE.md)
+
+---
+
+**Створено для швидкого і ефективного тестування вашого агента!** 🚀
