@@ -67,7 +67,7 @@ async def get_active_courses(search: Optional[str] = None, limit: int = 10) -> s
             "price": float(course.get("price_base", 0)),
             "hours": float(course.get("new_hours", 0)),
             "url": course.get("producturl", ""),
-            "description": course.get("new_abstractua", "")[:200] + "..." if course.get("new_abstractua") else ""
+            "description": course.get("new_abstractua", "") if course.get("new_abstractua") else ""
         })
 
     return json.dumps(result, ensure_ascii=False, indent=2)
@@ -138,7 +138,44 @@ async def get_course_by_code(code: str) -> str:
     }
     return json.dumps(result, ensure_ascii=False, indent=2)
 
-# ...existing code...
+@server.tool(
+    name="get_course_program",
+    title="Програма курсу",
+    description="Отримує детальну програму/зміст курсу українською мовою"
+)
+async def get_course_program(course_code: str) -> str:
+    """
+    Детальна програма курсу.
+    
+    Args:
+        course_code: Код курсу
+    """
+    params = {
+        "$filter": f"productnumber eq '{course_code}' and isstockitem eq false",
+        "$select": "productnumber,new_nameua,new_program,new_contentsua,new_prerequisitesua,producturl"
+    }
+    
+    courses = _get_crm_data("products", params)
+    
+    if not courses:
+        return f"Курс '{course_code}' не знайдено."
+    
+    course = courses[0]
+    
+    result = {
+        "code": course.get("productnumber"),
+        "name": course.get("new_nameua"),
+        "url": course.get("producturl"),
+        "short_program": course.get("new_program", "Програма недоступна"),
+        "detailed_content": course.get("new_contentsua", "Детальний зміст недоступний"),
+        "prerequisites": course.get("new_prerequisitesua", "Передумови не вказані")
+    }
+    
+    return json.dumps(result, ensure_ascii=False, indent=2)
+
+
+
+
 @server.tool(
     name="health",
     title="Health check",
