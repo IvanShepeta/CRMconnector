@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from app.redis_connector import RedisConnector
 from app.routers import route
 from contextlib import asynccontextmanager
-from src.agent_maneger import agent_manager
+from agent_manager import agent_manager
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -18,7 +19,9 @@ async def lifespan(app: FastAPI):
     Ініціалізує агента при старті та закриває при завершенні.
     """
     print("🚀 Запуск FastAPI сервера...")
-    
+    redis_connector = RedisConnector()
+    await redis_connector.ping()  # Перевірка, що Redis живий
+    app.state.redis = redis_connector  # Зберігаємо для використання
     # Startup: ініціалізуємо агента
     await agent_manager.initialize()
     
@@ -26,7 +29,8 @@ async def lifespan(app: FastAPI):
     
     # Shutdown: закриваємо агента
     print("🛑 Зупинка FastAPI сервера...")
-    await agent_manager.close()
+    await agent_manager.close()  # Коректно закриваємо агента
+    await redis_connector.close()  # Закриваємо Redis з'єднання
 
 # Створюємо FastAPI додаток
 app = FastAPI(

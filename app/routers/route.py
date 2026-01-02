@@ -1,6 +1,7 @@
+import asyncio
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException
 import json
-from src.agent_maneger import agent_manager
+from agent_manager import agent_manager
 from app.models import ChatMessage, NewConversationRequest
 from app.websocket_handler import ConnectionManager
 from app.redis_connector import RedisConnector
@@ -42,41 +43,39 @@ async def websocket_endpoint(websocket: WebSocket, user_id: int):
     await manager.send_personal_message(user_id, "assistant", greeting)
     
     try:
-        while True:
-            # Отримуємо повідомлення від клієнта
-            data = await websocket.receive_text()
-            message_data = json.loads(data)
-            user_message = message_data.get("message", "")
-            
-            if not user_message:
-                continue
-            
-            # Зберігаємо повідомлення користувача
-            await manager.send_personal_message(user_id, "user", user_message)
-            
-             # Отримуємо відповідь від агента в режимі стріму
-            full_response = ""
-            
-            try:
-                async for chunk in agent_manager.get_agent_response_stream(
-                    user_id, 
-                    user_message
-                ):
-                    full_response += chunk
-                    await manager.send_stream_chunk(user_id, chunk)
-                    
-                # ✅ Зберігаємо повну відповідь
-                await manager.save_agent_response(user_id, full_response)
-                # Сигналізуємо про завершення
-                await manager.send_stream_end(user_id)
+        async with asyncio.timeout(3600):  # Таймаут 1 година бездіяльності
+            while True:
+                # Отримуємо повідомлення від клієнта
+                data = await websocket.receive_text()
+                message_data = json.loads(data)
+                user_message = message_data.get("message", "")
                 
+                if not user_message:
+                    continue
+                
+                # Зберігаємо повідомлення користувача
+                await manager.send_personal_message(user_id, "user", user_message)
+                
+                # Отримуємо відповідь від агента в режимі стріму
+                full_response = ""
+                
+                try:
+                    async for chunk in agent_manager.get_agent_response_stream(
+                        user_id, 
+                        user_message
+                    ):
+                        full_response += chunk
+                        await manager.send_stream_chunk(user_id, chunk)
 
-
-
-            except Exception as e:
-                error_msg = f"Помилка агента: {str(e)}"
-                print(f"❌ {error_msg}")
-                await manager.send_message(user_id, "assistant", error_msg)
+                    # ✅ Зберігаємо повну відповідь
+                    await manager.save_agent_response(user_id, full_response)
+                    # Сигналізуємо про завершення
+                    await manager.send_stream_end(user_id)
+                    
+                except Exception as e:
+                    error_msg = f"Помилка агента: {str(e)}"
+                    print(f"❌ {error_msg}")
+                    await manager.send_personal_message(user_id, "assistant", error_msg)
     
     except WebSocketDisconnect:
         await manager.disconnect(user_id)

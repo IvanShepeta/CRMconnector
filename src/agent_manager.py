@@ -163,14 +163,28 @@ class AgentManager:
                 yield chunk.text
     
     async def close(self):
-        """Закриває агента"""
-        if self.credential:
-            await self.credential.close()
-        
+        """Закриває агента та всі ресурси"""
+        # Закриваємо всі активні threads
         self.user_threads.clear()
+        
+        # Закриваємо агента (це закриє MCP tools)
+        if self.agent:
+            try:
+                await self.agent.__aexit__(None, None, None)
+            except Exception as e:
+                print(f"⚠️ Помилка при закритті агента: {e}")
+            self.agent = None
+        
+        # Закриваємо credentials
+        if self.credential:
+            try:
+                await self.credential.close()
+            except Exception as e:
+                print(f"⚠️ Помилка при закритті credential: {e}")
+            self.credential = None
+        
         self.initialized = False
         print("👋 Agent Manager закрито")
-
 
 # Глобальний екземпляр
 agent_manager = AgentManager()
