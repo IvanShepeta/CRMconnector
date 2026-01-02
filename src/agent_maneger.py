@@ -14,13 +14,13 @@ class SimpleContextManager:
     """Простий context manager в пам'яті"""
     
     def __init__(self):
-        self.contexts: Dict[str, Dict] = {}
+        self.contexts: Dict[int, Dict] = {}
     
-    def get_context(self, user_id: str) -> Optional[Dict]:
+    def get_context(self, user_id: int) -> Optional[Dict]:
         """Отримує контекст з пам'яті"""
         return self.contexts.get(user_id)
     
-    def save_context(self, user_id: str, data: Dict):
+    def save_context(self, user_id: int, data: Dict):
         """Зберігає контекст в пам'ять"""
         if user_id not in self.contexts:
             self.contexts[user_id] = {
@@ -107,7 +107,7 @@ class AgentManager:
             ),
         ]
     
-    def get_or_create_thread(self, user_id: str):
+    def get_or_create_thread(self, user_id: int):
         """Отримує thread для користувача"""
         if user_id not in self.user_threads:
             if not self.agent:
@@ -117,13 +117,13 @@ class AgentManager:
         
         return self.user_threads[user_id]
     
-    def clear_thread(self, user_id: str):
+    def clear_thread(self, user_id: int):
         """Видаляє thread (нова розмова)"""
         if user_id in self.user_threads:
             del self.user_threads[user_id]
             print(f"🗑️ Thread видалено: {user_id}")
     
-    def get_user_context(self, user_id: str) -> Dict:
+    def get_user_context(self, user_id: int) -> Dict:
         """Отримує контекст користувача"""
         context = self.context_manager.get_context(user_id)
         if context:
@@ -136,11 +136,11 @@ class AgentManager:
             }
         return {"is_new_client": True}
     
-    def save_user_context(self, user_id: str, data: Dict):
+    def save_user_context(self, user_id: int, data: Dict):
         """Зберігає контекст"""
         self.context_manager.save_context(user_id, data)
     
-    async def get_agent_response_stream(self, user_id: str, message: str):
+    async def get_agent_response_stream(self, user_id: int, message: str):
         """Стрімить відповідь агента"""
         if not self.initialized:
             await self.initialize()

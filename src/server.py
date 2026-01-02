@@ -187,7 +187,7 @@ async def health() -> str:
 
 if __name__ == "__main__":
     transport_type = sys.argv[1] if len(sys.argv) > 1 else "http"
-    server.settings.log_level = os.environ.get("LOG_LEVEL", "DEBUG")
+    server.settings.log_level = os.environ.get("LOG_LEVEL", "CRITICAL")
 
     if transport_type == "http":
         port = int(os.environ.get("PORT", 3001))

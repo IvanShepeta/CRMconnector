@@ -10,15 +10,33 @@
         .container { max-width: 900px; margin: 0 auto; padding: 20px; }
         .header { background: #1976d2; color: white; padding: 20px; border-radius: 10px 10px 0 0; }
         .chat-container { background: white; height: 500px; overflow-y: auto; padding: 20px; border-left: 1px solid #ddd; border-right: 1px solid #ddd; }
-        .message { margin: 15px 0; padding: 12px; border-radius: 10px; max-width: 70%; }
+        
+        /* ✅ Покращене форматування повідомлень */
+        .message { 
+            margin: 15px 0; 
+            padding: 12px; 
+            border-radius: 10px; 
+            max-width: 70%; 
+            white-space: pre-wrap;      /* Зберігає переноси рядків */
+            word-wrap: break-word;       /* Переносить довгі слова */
+            line-height: 1.6;            /* Відступ між рядками */
+        }
+        
         .user { background: #e3f2fd; margin-left: auto; text-align: right; }
         .assistant { background: #f5f5f5; }
+        
+        /* ✅ Стилі для форматованого тексту */
+        .message strong { color: #1976d2; font-weight: 600; }
+        .message ul, .message ol { margin: 10px 0; padding-left: 20px; }
+        .message li { margin: 5px 0; }
+        .message p { margin: 8px 0; }
+        
         .input-area { display: flex; gap: 10px; padding: 15px; background: white; border-radius: 0 0 10px 10px; border: 1px solid #ddd; }
         #userIdInput { padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 1; }
         #messageInput { padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 3; }
         button { padding: 10px 20px; background: #1976d2; color: white; border: none; border-radius: 5px; cursor: pointer; }
         button:hover { background: #1565c0; }
-        .typing { color: #999; font-style: italic; }
+        .status { padding: 10px; background: #e8f5e9; border-radius: 5px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -28,10 +46,12 @@
             <p>Ваш персональний консультант з підбору IT-курсів</p>
         </div>
         
+        <div class="status" id="status">🔴 Не підключено</div>
+        
         <div class="chat-container" id="chat"></div>
         
         <div class="input-area">
-            <input type="text" id="userIdInput" placeholder="Ваш email або телефон..." />
+            <input type="number" id="userIdInput" placeholder="Ваш ID (або залиште порожнім)..." />
             <input type="text" id="messageInput" placeholder="Напишіть ваше запитання..." />
             <button onclick="sendMessage()">Відправити</button>
             <button onclick="newConversation()">Нова розмова</button>
@@ -43,81 +63,138 @@
         let currentUserId = null;
         let currentMessage = null;
 
+        // Генеруємо або отримуємо user_id
+        function getUserId() {
+            const inputValue = document.getElementById('userIdInput').value.trim();
+            
+            if (inputValue) {
+                return parseInt(inputValue);
+            }
+            
+            let userId = localStorage.getItem('nt_user_id');
+            if (!userId) {
+                userId = Math.floor(Math.random() * 1000000);
+                localStorage.setItem('nt_user_id', userId);
+            }
+            
+            document.getElementById('userIdInput').value = userId;
+            return parseInt(userId);
+        }
+
         function connectWebSocket(userId) {
             if (ws) ws.close();
             
             ws = new WebSocket(`ws://localhost:8000/ws/${userId}`);
             currentUserId = userId;
             
-            ws.onopen = () => console.log('✅ WebSocket підключено');
+            ws.onopen = () => {
+                document.getElementById('status').innerHTML = `🟢 Підключено (ID: ${userId})`;
+                console.log('✅ WebSocket підключено');
+            };
             
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 
-                if (data.type === 'chunk') {
-                    // Додаємо chunk до поточного повідомлення
+                if (data.type === 'stream') {
                     if (!currentMessage) {
                         currentMessage = addMessage('assistant', '');
                     }
-                    currentMessage.textContent += data.content;
-                } else if (data.type === 'stream_end') {
+                    
+                    // ✅ Додаємо chunk і форматуємо
+                    const currentText = currentMessage.getAttribute('data-raw-text') || '';
+                    const newText = currentText + data.chunk;
+                    currentMessage.setAttribute('data-raw-text', newText);
+                    
+                    // ✅ Форматуємо текст (жирний, переноси)
+                    currentMessage.innerHTML = formatText(newText);
+                } 
+                else if (data.type === 'stream_end') {
                     currentMessage = null;
-                } else {
-                    // Звичайне повідомлення
+                } 
+                else if (data.role && data.content) {
                     addMessage(data.role, data.content);
                 }
             };
             
-            ws.onerror = (error) => console.error('❌ WebSocket помилка:', error);
-            ws.onclose = () => console.log('👋 WebSocket закрито');
+            ws.onerror = (error) => {
+                console.error('❌ WebSocket помилка:', error);
+                document.getElementById('status').innerHTML = '🔴 Помилка підключення';
+            };
+            
+            ws.onclose = () => {
+                console.log('👋 WebSocket закрито');
+                document.getElementById('status').innerHTML = '🔴 Відключено';
+            };
         }
 
+        // ✅ Функція форматування тексту
+        function formatText(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Жирний текст
+                .replace(/\n/g, '<br>');  // Переноси рядків
+        }
+
+        // ✅ Оновлена функція додавання повідомлення
         function addMessage(role, content) {
             const chat = document.getElementById('chat');
             const div = document.createElement('div');
             div.className = `message ${role}`;
-            div.textContent = content;
+            
+            // Форматуємо контент
+            div.innerHTML = formatText(content);
+            div.setAttribute('data-raw-text', content);
+            
             chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
             return div;
         }
 
         function sendMessage() {
-            const userId = document.getElementById('userIdInput').value.trim();
+            const userId = getUserId();
             const message = document.getElementById('messageInput').value.trim();
-            
-            if (!userId) {
-                alert('Будь ласка, вкажіть ваш email або телефон');
-                return;
-            }
             
             if (!message) return;
             
             if (!ws || currentUserId !== userId) {
                 connectWebSocket(userId);
+                setTimeout(() => {
+                    if (ws && ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({ message }));
+                        document.getElementById('messageInput').value = '';
+                    }
+                }, 500);
+            } else if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ message }));
+                document.getElementById('messageInput').value = '';
             }
-            
-            ws.send(JSON.stringify({ message }));
-            document.getElementById('messageInput').value = '';
         }
 
         async function newConversation() {
-            const userId = document.getElementById('userIdInput').value.trim();
-            if (!userId) return;
+            const userId = getUserId();
             
-            await fetch('/api/new-conversation', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId })
-            });
-            
-            document.getElementById('chat').innerHTML = '';
-            connectWebSocket(userId);
+            try {
+                await fetch('/api/new-conversation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId })
+                });
+                
+                document.getElementById('chat').innerHTML = '';
+                if (ws) ws.close();
+                connectWebSocket(userId);
+            } catch (error) {
+                console.error('Помилка очищення історії:', error);
+            }
         }
 
         document.getElementById('messageInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
+
+        window.onload = () => {
+            const userId = getUserId();
+            connectWebSocket(userId);
+        };
     </script>
 </body>
 </html>

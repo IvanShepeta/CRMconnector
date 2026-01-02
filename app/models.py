@@ -2,15 +2,13 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 class ChatMessage(BaseModel):
-    user_id: str
+    user_id: int
     message: str
     
 class ChatResponse(BaseModel):
     role: str  
-    content: str
+    content: int
     
 class NewConversationRequest(BaseModel):
-    user_id: str
+    user_id: int
 
-class NewConversationRequest(BaseModel):
-    user_id: str
